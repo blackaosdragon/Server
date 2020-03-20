@@ -1,0 +1,15 @@
+@font-face{
+    font-family: 'Znric-Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: url(./zrnic.woff) format('woff')
+}
+html, body{
+    width: 100%;
+}
+body{
+    /*display: flex;*/
+    align-items: center;
+    background-color:#99ccff;
+    font-family: 'Znric-Regular';
+}

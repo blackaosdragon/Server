@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sensor temperatura</title>
+        <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
+        <link rel="stylesheet" href="stiles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+        <h1>Monitorización de temperatura</h1>
+    </div>
+    <div>
+        <h1>Temperatura oficina:</h1>
+    </div>
+        <h1>Sección:</h1>
+        <!--<h3>Taller: </h3> -->
+        <h3 id="wire2"></h3>
+        <h3 id="temp"></h3>
+        
+
+        <script src="/socket.io/socket.io.js"></script>
+        
+        <script>
+            //let socket = io.connect('http://192.168.1.92:4000');
+
+            /*
+            socket.on('data',data=>{
+                    console.log(data);
+                    let mostrador1 = document.getElementById('temp');
+                    
+                    mostrador1.innerHTML = `Data = ${data}`
+
+            })
+            socket.on('solicitud',solicitud => {
+                console.log(solicitud);
+                let mostrador2 = document.getElementById('wire2');
+
+                mostrador2.innerHTML = `${solicitud}`;
+            })
+            */
+            let socket = io.connect('http://192.168.1.92:4000');
+            //
+            
+            let getTemperature = (data) =>{
+                let temp = "";
+                    for(let i=15; i<=19; i++){
+                        temp = temp+data[i];
+                        //console.log(data[i]);
+                    }
+                    console.log("id: 2, temp: "+temp);
+            }
+            socket.on('temp',(data)=>{
+                //console.log(data[4]);
+                let displayWire2 = document.getElementById('wire2');
+                let displayTemp = document.getElementById('temp');
+                let clock = new Date();
+                if (data[4]==="2"){                    
+                    let temp = "";
+                    for (let i = 15; i <= 19; i++){
+                        temp = temp + data[i];
+                    }
+                    displayWire2.innerHTML = `Cocina ${temp} °c \n        Hora: ${clock.getHours()} : ${clock.getMinutes()}`
+                } else if (data[4]==="1"){
+                    let temp = "";
+                    for (let i = 15; i <= 19; i++){
+                        temp = temp + data[i];
+                    }
+                    //console.log("id: 1, temp: "+temp());
+                    displayTemp.innerHTML = `Taller ${temp} °c \n        Hora: ${clock.getHours()} : ${clock.getMinutes()}`;
+                }                 
+            })
+        </script>
+
+        <!--
+        <h1>Temperature Graph</h1>
+        <h4>Date: <span id="date"></span></h4>
+        <div class="chart-container" style="position: relative; width:75vw; margin: auto;">
+            <canvas id="myChart"></canvas>
+        </div>
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+        <script>
+            var socket = io.connect('http://localhost:4000'); //connect to server
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                labels: [],
+                datasets: [{
+                    label: "Temperature",
+                    borderColor: "#FF5733",
+                    data: [],
+                    fill: false,
+                    pointStyle: 'circle',
+                    backgroundColor: '#3498DB',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    lineTension: 0,
+                }]
+                },
+
+                // Configuration options go here
+                options: {}
+                
+            });
+
+            socket.on('temp', function(data) { //As a temp data is received 
+                console.log(data.temp);
+                document.getElementById('date').innerHTML = data.date; //update the date
+                if(chart.data.labels.length != 15) { //If we have less than 15 data points in the graph
+                    chart.data.labels.push(data.time);  //Add time in x-asix
+                    chart.data.datasets.forEach((dataset) => {
+                        dataset.data.push(data.temp); //Add temp in y-axis
+                    });
+                }
+                else { //If there are already 15 data points in the graph.
+                    chart.data.labels.shift(); //Remove first time data
+                    chart.data.labels.push(data.time); //Insert latest time data
+                    chart.data.datasets.forEach((dataset) => {
+                        dataset.data.shift(); //Remove first temp data
+                        dataset.data.push(data.temp); //Insert latest temp data
+                    });
+                }
+                chart.update(); //Update the graph.
+            });
+        </script>
+        -->
+    </body>
+    
+</html>
